@@ -1,0 +1,19 @@
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+Gem::Specification.new do |s|
+  s.name     = 'rxgettext'
+  s.version  = '0.0.1'
+  s.date     = Date.today.to_s
+  s.summary  = 'Extract gettext strings from Ruby source'
+  s.authors  = ['Mantas Norvaiša']
+  s.email    = 'mntnorv@gmail.com'
+  s.homepage = 'https://github.com/mntnorv/rxgettext'
+  s.license  = 'MIT'
+
+  s.files         = `git ls-files`.split
+  s.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  s.require_paths = ['lib']
+
+  s.required_ruby_version = '>= 2.0.0'
+end

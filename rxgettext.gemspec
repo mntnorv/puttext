@@ -12,8 +12,11 @@ Gem::Specification.new do |s|
   s.license  = 'MIT'
 
   s.files         = `git ls-files`.split
-  s.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.require_paths = ['lib']
 
   s.required_ruby_version = '>= 2.0.0'
+
+  s.add_runtime_dependency('parser', '>= 2.4.0.0', '< 3.0')
+  s.add_runtime_dependency('fast_gettext', '>= 1.4.0', '< 2.0')
 end

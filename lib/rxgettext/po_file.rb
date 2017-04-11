@@ -6,19 +6,11 @@ module RXGetText
       @entries = entries
     end
 
-    def save(path)
-      file = File.open(path, 'w')
-      write_to(file)
-      file.close
-    end
-
     def to_s
       str_io = StringIO.new
       write_to(str_io)
       str_io.string
     end
-
-    private
 
     def write_to(io)
       deduplicate
@@ -28,6 +20,8 @@ module RXGetText
         io.write(entry.to_s)
       end
     end
+
+    private
 
     def deduplicate
       uniq_entries = {}

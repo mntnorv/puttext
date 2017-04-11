@@ -2,10 +2,13 @@ require_relative 'parser'
 require_relative 'po_file'
 
 require 'fast_gettext'
+require 'optparse'
 
 module RXGetText
   class Runner
     include FastGettext::Translation
+
+    USAGE_TEXT = 'Usage: rxgettext LOCATION [options]'
 
     def self.run_cmd(args)
       new.run_cmd(args)
@@ -15,21 +18,29 @@ module RXGetText
 
     def run_cmd(args)
       options = parse_args(args)
-      run(options[:path])
+      output = STDOUT
+
+      if options[:output_file]
+        output = File.open(options[:output_file], 'w')
+      end
+
+      run(options[:path], output)
+
+      output.close if options[:output_file]
     rescue => e
       puts "#{_('error:')} #{e.message}"
       puts e.backtrace
       exit 1
     end
 
-    def run(path)
+    def run(path, output)
       files           = files_in_path(path)
       supported_files = filter_files(files, path)
 
       parser  = RXGetText::Parser.new
       po_file = parse_files(parser, supported_files)
 
-      puts po_file.to_s
+      po_file.write_to(output)
     end
 
     private
@@ -69,18 +80,27 @@ module RXGetText
     end
 
     def parse_args(args)
-      if args.length != 1
+      options = {}
+
+      args_left = OptionParser.new do |opts|
+        opts.banner = USAGE_TEXT
+
+        opts.on('-o', '--output PATH', 'Output file path') do |o|
+          options[:output_file] = o
+        end
+      end.parse!(args)
+
+      if args_left.length != 1
         print_usage
         exit 1
       else
-        {
-          path: args[0]
-        }
+        options[:path] = args_left[0]
+        options
       end
     end
 
     def print_usage
-      puts _('Usage: rxgettext [PATH]')
+      puts USAGE_TEXT
     end
   end
 end

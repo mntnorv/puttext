@@ -58,7 +58,8 @@ module RXGetText::Parser
       when :str
         ast_node.children[0]
       else
-        raise _("unsupported AST node type: %{type}") % { type: ast_node.type }
+        raise ParseError,
+          'unsupported AST node type: %{type}' % { type: ast_node.type }
       end
     end
 

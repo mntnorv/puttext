@@ -1,12 +1,8 @@
 require_relative 'extractor'
-
 require 'optparse'
-require 'fast_gettext'
 
 module RXGetText
   class Cmdline
-    include FastGettext::Translation
-
     USAGE_TEXT = 'Usage: rxgettext LOCATION [options]'
 
     def self.run(args)
@@ -25,7 +21,7 @@ module RXGetText
         po_file.write_to(STDOUT)
       end
     rescue => e
-      puts "#{_('error:')} #{e.message}"
+      puts "error: #{e.message}"
       puts e.backtrace
       exit 1
     end

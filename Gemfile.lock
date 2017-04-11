@@ -2,14 +2,12 @@ PATH
   remote: .
   specs:
     rxgettext (0.0.1)
-      fast_gettext (>= 1.4.0, < 2.0)
       parser (>= 2.4.0.0, < 3.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.3.0)
-    fast_gettext (1.4.0)
     parser (2.4.0.0)
       ast (~> 2.2)
 

@@ -1,12 +1,8 @@
 require_relative 'parser/ruby'
 require_relative 'po_file'
 
-require 'fast_gettext'
-
 module RXGetText
   class Extractor
-    include FastGettext::Translation
-
     PARSERS = {
       ruby: RXGetText::Parser::Ruby.new
     }.freeze
@@ -14,6 +10,13 @@ module RXGetText
     EXTENSIONS = {
       '.rb' => :ruby
     }.freeze
+
+    # Thrown when a given file cannot be parsed, because its format or language
+    # is not supported.
+    class UnsupportedFileError < StandardError; end
+
+    # Thrown when the path passed to #extract does not exist.
+    class NoSuchFileError < StandardError; end
 
     # Check if a file is supported by the parser, based on its extension.
     # @return [Boolean] whether the file is supported.
@@ -48,7 +51,7 @@ module RXGetText
         return PARSERS[lang] if path.end_with?(ext)
       end
 
-      raise _('file not supported: %{path}') % { path: path }
+      raise UnsupportedFileError, 'file not supported: %{path}' % { path: path }
     end
 
     def parse_files(files)
@@ -66,10 +69,6 @@ module RXGetText
         self.class.is_file_supported?(file)
       end
 
-      if supported_files.length == 0
-        raise _('no supported files found: %{path}') % { path: path }
-      end
-
       supported_files
     end
 
@@ -81,7 +80,8 @@ module RXGetText
       elsif File.directory?(path)
         files = Dir.glob(File.join(path, '**/*'))
       else
-        raise _('no such file or directory: %{path}') % { path: path }
+        raise NoSuchFileError,
+          'no such file or directory: %{path}' % { path: path }
       end
 
       files

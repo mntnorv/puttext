@@ -1,10 +1,8 @@
 require_relative '../po_entry'
 
-require 'fast_gettext'
-
 module RXGetText::Parser
   class Base
-    include FastGettext::Translation
+    class ParseError < StandardError; end
 
     # Set the supported file extensions by this parser.
     # @param [Array<String>] array the array of supported file extensions.

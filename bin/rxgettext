@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/rxgettext'
 require_relative '../lib/rxgettext/cmdline'
 
 RXGetText::Cmdline.run(ARGV)

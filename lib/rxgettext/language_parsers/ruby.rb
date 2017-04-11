@@ -43,6 +43,8 @@ module RXGetText::LanguageParsers
     end
 
     def find_strings_in_ast(ast_node)
+      return [] unless ast_node.is_a? Parser::AST::Node
+
       strings = []
 
       if ast_node.type == :send

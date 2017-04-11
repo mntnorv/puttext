@@ -1,5 +1,4 @@
-require_relative 'rxgettext/runner'
-require_relative 'rxgettext/parser'
+require_relative 'rxgettext/extractor'
 
 require 'fast_gettext'
 

@@ -2,7 +2,7 @@ require_relative '../po_entry'
 
 require 'fast_gettext'
 
-module RXGetText::LanguageParsers
+module RXGetText::Parser
   class Base
     include FastGettext::Translation
 

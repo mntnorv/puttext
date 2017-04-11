@@ -23,20 +23,21 @@ module RXGetText
       @msgid        = id
       @msgctxt      = attrs[:msgctxt] || ctx
       @msgid_plural = attrs[:msgid_plural]
-      @references   = attrs[:references]
+      @references   = attrs[:references] || []
     end
 
     def to_s
       str = ''
 
-      if @references && @references.length > 0
-        str = add_comment(str, ':', @references.join(' '))
-      end
+      # Add comments
+      str = add_comment(str, ':', @references.join(' ')) if references?
 
+      # Add id and context
       str = add_string(str, 'msgctxt', @msgctxt) if @msgctxt
       str = add_string(str, 'msgid', @msgid)
 
-      if @msgid_plural
+      # Add plural id and empty translations
+      if plural?
         str = add_string(str, 'msgid_plural', @msgid_plural)
         str = add_string(str, 'msgstr[0]', '')
         str = add_string(str, 'msgstr[1]', '')
@@ -45,6 +46,23 @@ module RXGetText
       end
 
       str
+    end
+
+    def references?
+      @references.length > 0
+    end
+
+    def plural?
+      !@msgid_plural.nil?
+    end
+
+    def unique_key
+      [@msgid, @msgctxt]
+    end
+
+    def merge(other_entry)
+      @references += other_entry.references
+      self
     end
 
     private
@@ -79,12 +97,14 @@ module RXGetText
       if lines.length < 2
         "\"#{lines[0]}\""
       else
-        po_str = "\"\"\n"
+        po_str = "\"\""
+
         lines.each do |line|
-          po_str << '"'
+          po_str << "\n\""
           po_str << line
-          po_str << "\\n\"\n"
+          po_str << "\\n\""
         end
+
         po_str
       end
     end

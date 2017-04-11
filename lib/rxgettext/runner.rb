@@ -1,4 +1,5 @@
 require_relative 'parser'
+require_relative 'po_file'
 
 require 'fast_gettext'
 
@@ -25,22 +26,22 @@ module RXGetText
       files           = files_in_path(path)
       supported_files = filter_files(files, path)
 
-      parser = RXGetText::Parser.new
-      parse_files(parser, supported_files)
+      parser  = RXGetText::Parser.new
+      po_file = parse_files(parser, supported_files)
+
+      puts po_file.to_s
     end
 
     private
 
     def parse_files(parser, files)
-      strings = []
+      entries = []
 
       files.each do |path|
-        strings += parser.strings_from_file(path)
+        entries += parser.strings_from_file(path)
       end
 
-      puts strings.map(&:to_s).join("\n")
-
-      strings
+      POFile.new(entries)
     end
 
     def filter_files(files, path)

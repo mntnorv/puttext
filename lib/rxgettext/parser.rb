@@ -6,29 +6,18 @@ module RXGetText
   class Parser
     include FastGettext::Translation
 
-    # Initialize individual language parsers
-    @extension_map = {}
+    PARSERS = {
+      ruby: RXGetText::LanguageParsers::Ruby.new
+    }.freeze
 
-    LANGUAGE_PARSERS = [
-      RXGetText::LanguageParsers::Ruby
-    ].freeze
-
-    LANGUAGE_PARSERS.each do |parser_class|
-      parser_obj = parser_class.new
-
-      parser_class.get_extensions.each do |ext|
-        @extension_map[ext] = parser_obj
-      end
-    end
+    EXTENSIONS = {
+      '.rb' => :ruby
+    }.freeze
 
     # Check if a file is supported by the parser, based on its extension.
     # @return [Boolean] whether the file is supported.
     def self.is_file_supported?(path)
-      @extension_map.keys.any? { |ext| path.end_with?(ext) }
-    end
-
-    def self._extension_map
-      @extension_map
+      EXTENSIONS.keys.any? { |ext| path.end_with?(ext) }
     end
 
     # Parse gettext strings from a file in the path.
@@ -42,8 +31,8 @@ module RXGetText
     private
 
     def parser_by_path(path)
-      self.class._extension_map.each do |ext, parser|
-        return parser if path.end_with?(ext)
+      EXTENSIONS.each do |ext, lang|
+        return PARSERS[lang] if path.end_with?(ext)
       end
 
       raise _('file not supported: %{path}') % { path: path }

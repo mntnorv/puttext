@@ -59,7 +59,7 @@ module RXGetText
       if File.file?(path)
         files = [path]
       elsif File.directory?(path)
-        files = Dir.glob('**/*')
+        files = Dir.glob(File.join(path, '**/*'))
       else
         raise _('no such file or directory: %{path}') % { path: path }
       end

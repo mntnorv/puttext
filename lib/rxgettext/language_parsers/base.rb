@@ -23,13 +23,17 @@ module RXGetText::LanguageParsers
     # @return [Array<RXGetText::POEntry>] an array of POEntry objects extracted
     #   from the given file.
     def strings_from_file(path)
-      strings_from_source(File.read(path))
+      strings_from_source(File.read(path), filename: path)
     end
 
     # @abstract Subclass is expected to implement #strings_from_source
     # @!method strings_from_source(source)
     #   Parse gettext strings from a given snippet of source code.
     #   @param [String] the snippet of source code to parse.
+    #   @option opts [String] :filename path of the file being parsed. Defaults
+    #     to "(string)".
+    #   @option opts [Integer] :first_line number of the first line being
+    #     parsed. Defaults to 1.
     #   @return [Array<RXGetText::POEntry>] an array of POEntry objects
     #     extracted from the given source code.
   end

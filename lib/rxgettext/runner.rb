@@ -39,7 +39,7 @@ module RXGetText
         strings += parser.strings_from_file(path)
       end
 
-      p strings
+      puts strings.map(&:to_s).join
       strings
     end
 

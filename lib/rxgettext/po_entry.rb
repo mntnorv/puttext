@@ -15,6 +15,19 @@ module RXGetText
     attr_reader :msgctxt
     attr_reader :references
 
+    # Create a new POEntry
+    #
+    # @param [Hash] attrs
+    # @option attrs [String] :msgid the id of the string (the string that needs
+    #   to be translated). Can include a context, separated from the id by
+    #   {NS_SEPARATOR} or by the specified :separator.
+    # @option attrs [String] :msgid_plural the pluralized id of the string (the
+    #   pluralized string that needs to be translated).
+    # @option attrs [String] :msgctxt the context of the string.
+    # @option attrs [Array<String>] :references a list of files with line
+    #   numbers, pointing to where the string was found.
+    # @option attrs [String] :separator the separator of context from id in
+    #   :msgid.
     def initialize(attrs)
       id, ctx = extract_context(
         attrs[:msgid], attrs[:separator] || NS_SEPARATOR
@@ -26,6 +39,8 @@ module RXGetText
       @references   = attrs[:references] || []
     end
 
+    # Convert the entry to a string representation, to be written to a .po file
+    # @return [String] a string representation of the entry.
     def to_s
       str = ''
 
@@ -48,18 +63,31 @@ module RXGetText
       str
     end
 
+    # Check if the entry has any references.
+    # @return [Boolean] whether the entry has any references.
     def references?
       @references.length > 0
     end
 
+    # Check if the entry has a plural form.
+    # @return [Boolean] whether the entry has a plural form.
     def plural?
       !@msgid_plural.nil?
     end
 
+    # Return an object uniquely identifying this entry. The returned object can
+    # be used to find duplicate entries.
+    # @return an object uniquely identifying this entry.
     def unique_key
       [@msgid, @msgctxt]
     end
 
+    # Merge this entry with another entry. Modifies the current entry in place.
+    # Currently, merges only the references, and leaves other attributes of the
+    # current entry untouched.
+    #
+    # @param [POEntry] other_entry the entry to merge with.
+    # @return [POEntry] the merged entry.
     def merge(other_entry)
       @references += other_entry.references
       self

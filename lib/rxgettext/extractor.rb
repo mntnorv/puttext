@@ -37,8 +37,8 @@ module RXGetText
     end
 
     # Parse gettext strings from a file in the path.
-    # @param [String] the path of the file to parse.
-    # @return [Array<RXGetText::POEntry>] an array of POEntry objects extracted
+    # @param [String] path the path of the file to parse.
+    # @return [Array<POEntry>] an array of POEntry objects extracted
     #   from the given file.
     def extract_from_file(path)
       parser_by_path(path).strings_from_file(path)

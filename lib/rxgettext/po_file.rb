@@ -2,6 +2,9 @@ module RXGetText
   class POFile
     attr_accessor :entries
 
+    # Create a new POFile
+    # @param [Array<POEntry>] entries an array of POEntry objects, that should
+    #   be placed in this file.
     def initialize(entries)
       @entries = entries
     end
@@ -12,6 +15,8 @@ module RXGetText
       str_io.string
     end
 
+    # Write the contents of this file to the specified IO object.
+    # @param [IO] io the IO object to write the contents of the file to.
     def write_to(io)
       deduplicate
 

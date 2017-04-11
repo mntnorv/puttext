@@ -5,10 +5,14 @@ module RXGetText
   class Cmdline
     USAGE_TEXT = 'Usage: rxgettext LOCATION [options]'
 
+    # Run the commmand line tool rxgettext.
+    # @param [Array<String>] args the command line arguments.
     def self.run(args)
       new.run(args)
     end
 
+    # Run the commmand line tool rxgettext.
+    # @param [Array<String>] args the command line arguments.
     def run(args)
       options = parse_args(args)
       po_file = Extractor.new.extract(options[:path])

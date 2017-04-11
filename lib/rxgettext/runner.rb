@@ -26,7 +26,6 @@ module RXGetText
       supported_files = filter_files(files, path)
 
       parser = RXGetText::Parser.new
-
       parse_files(parser, supported_files)
     end
 
@@ -39,7 +38,8 @@ module RXGetText
         strings += parser.strings_from_file(path)
       end
 
-      puts strings.map(&:to_s).join
+      puts strings.map(&:to_s).join("\n")
+
       strings
     end
 

@@ -11,6 +11,30 @@ module RXGetText::LanguageParsers
   class Ruby < Base
     extensions %w(.rb)
 
+    METHODS = {
+      gettext:   :regular,
+      _:         :regular,
+      ngettext:  :plural,
+      n_:        :plural,
+      sgettext:  :context_sep,
+      s_:        :context_sep,
+      nsgettext: :context_sep_plural,
+      ns_:       :context_sep_plural,
+      pgettext:  :context,
+      p_:        :context,
+      npgettext: :context_plural,
+      np_:       :context_plural
+    }.freeze
+
+    PARAMS = {
+      regular:            %i(msgid),
+      plural:             %i(msgid msgid_plural),
+      context:            %i(msgctxt msgid),
+      context_plural:     %i(msgctxt msgid msgid_plural),
+      context_sep:        %i(msgid separator),
+      context_sep_plural: %i(msgid msgid_plural _ separator)
+    }
+
     def initialize
       @ruby_parser = Parser::CurrentRuby.new
     end
@@ -28,38 +52,52 @@ module RXGetText::LanguageParsers
     private
 
     def string_from_ast_node(ast_node)
+      return if ast_node.nil?
+
       case ast_node.type
       when :str
-        filename = ast_node.location.expression.source_buffer.name
-        line     = ast_node.location.line
-
-        RXGetText::POEntry.new(
-          msgid: ast_node.children[0],
-          references: ["#{filename}:#{line}"]
-        )
+        ast_node.children[0]
       else
         raise _("unsupported AST node type: %{type}") % { type: ast_node.type }
       end
     end
 
+    def po_entry_from_ast_node(ast_node, type)
+      filename = ast_node.location.expression.source_buffer.name
+      line     = ast_node.location.line
+
+      entry_attrs = {
+        references: ["#{filename}:#{line}"]
+      }
+
+      PARAMS[type].each_with_index do |name, index|
+        next if name == :_ # skip parameters named _
+
+        param = string_from_ast_node(ast_node.children[index + 2])
+        entry_attrs[name] = param
+      end
+
+      RXGetText::POEntry.new(entry_attrs)
+    end
+
     def find_strings_in_ast(ast_node)
       return [] unless ast_node.is_a? Parser::AST::Node
 
-      strings = []
+      entries = []
 
-      if ast_node.type == :send
-        case ast_node.children[1]
-        when :_
-          strings << string_from_ast_node(ast_node.children[2])
-        end
+      if ast_node.type == :send && METHODS[ast_node.children[1]]
+        entries << po_entry_from_ast_node(
+          ast_node,
+          METHODS[ast_node.children[1]]
+        )
       end
 
       ast_node.children.each do |child|
         next unless child.is_a? Parser::AST::Node
-        strings += find_strings_in_ast(child)
+        entries += find_strings_in_ast(child)
       end
 
-      strings
+      entries
     end
   end
 end

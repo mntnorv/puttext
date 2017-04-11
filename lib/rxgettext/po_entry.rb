@@ -1,5 +1,7 @@
 module RXGetText
   class POEntry
+    NS_SEPARATOR = '|'
+
     PO_C_STYLE_ESCAPES = {
       "\n" => "\\n",
       "\r" => "\\r",
@@ -14,9 +16,13 @@ module RXGetText
     attr_reader :references
 
     def initialize(attrs)
-      @msgid        = attrs[:msgid]
+      id, ctx = extract_context(
+        attrs[:msgid], attrs[:separator] || NS_SEPARATOR
+      )
+
+      @msgid        = id
+      @msgctxt      = attrs[:msgctxt] || ctx
       @msgid_plural = attrs[:msgid_plural]
-      @msgctxt      = attrs[:msgctxt]
       @references   = attrs[:references]
     end
 
@@ -29,13 +35,24 @@ module RXGetText
 
       str = add_string(str, 'msgctxt', @msgctxt) if @msgctxt
       str = add_string(str, 'msgid', @msgid)
-      str = add_string(str, 'msgid_plural', @msgid_plural) if @msgid_plural
-      str = add_string(str, 'msgstr', '')
+
+      if @msgid_plural
+        str = add_string(str, 'msgid_plural', @msgid_plural)
+        str = add_string(str, 'msgstr[0]', '')
+        str = add_string(str, 'msgstr[1]', '')
+      else
+        str = add_string(str, 'msgstr', '')
+      end
 
       str
     end
 
     private
+
+    def extract_context(str, separator)
+      parts = str.rpartition(separator)
+      return parts[2], parts[0] == '' ? nil : parts[0]
+    end
 
     def add_comment(str, comment_type, value)
       value.each_line do |line|
@@ -59,8 +76,8 @@ module RXGetText
     def string_to_po(str)
       lines = po_escape_string(str).split('\n')
 
-      if lines.length == 1
-        '"' + str + '"'
+      if lines.length < 2
+        "\"#{lines[0]}\""
       else
         po_str = "\"\"\n"
         lines.each do |line|

@@ -4,6 +4,9 @@ addons:
   code_climate:
     repo_token: 2df66540ac895ba609ec19665a233e73dc7b4d3f3e0c788c4b99ed974765d4bf
 
+after_success:
+  - bundle exec codeclimate-test-reporter
+
 notifications:
   email: false
 

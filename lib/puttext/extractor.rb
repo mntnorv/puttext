@@ -33,7 +33,7 @@ module PutText
     #   the files or file in the specified path.
     def extract(path)
       files           = files_in_path(path)
-      supported_files = filter_files(files, path)
+      supported_files = filter_files(files)
 
       parse_files(supported_files)
     end
@@ -66,7 +66,7 @@ module PutText
       POFile.new(entries)
     end
 
-    def filter_files(files, _path)
+    def filter_files(files)
       supported_files = files.select do |file|
         self.class.file_supported?(file)
       end

@@ -154,4 +154,33 @@ describe RXGetText::POEntry do
       end
     end
   end
+
+  describe '#merge' do
+    let(:entry) do
+      described_class.new(
+        msgid: 'An error occurred!',
+        references: ['errors.rb:15']
+      )
+    end
+
+    let(:other_entry) do
+      described_class.new(
+        msgid: 'An error occurred!',
+        references: [
+          'subfolder/random_file.rb:5',
+          'subfolder/another_file.rb:168'
+        ]
+      )
+    end
+
+    let(:merged_entry) { entry.merge(other_entry) }
+
+    it 'merges references of both entries' do
+      expect(merged_entry.references).to eq([
+        'errors.rb:15',
+        'subfolder/random_file.rb:5',
+        'subfolder/another_file.rb:168'
+      ])
+    end
+  end
 end

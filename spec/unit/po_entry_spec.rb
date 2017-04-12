@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RXGetText::POEntry do
+describe PutText::POEntry do
   describe '#initialize' do
     context 'creating a simple PO entry' do
       let(:entry) { described_class.new(msgid: 'An error occurred!') }

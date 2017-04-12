@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rxgettext (0.0.1)
+    puttext (0.0.1)
       parser (>= 2.4.0.0, < 3.0)
 
 GEM
@@ -32,7 +32,7 @@ PLATFORMS
 DEPENDENCIES
   rake
   rspec (~> 3.5)
-  rxgettext!
+  puttext!
 
 BUNDLED WITH
    1.14.6

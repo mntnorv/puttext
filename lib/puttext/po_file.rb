@@ -1,4 +1,4 @@
-module RXGetText
+module PutText
   class POFile
     attr_accessor :entries
 

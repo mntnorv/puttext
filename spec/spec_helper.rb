@@ -1,1 +1,1 @@
-require 'rxgettext'
+require 'puttext'

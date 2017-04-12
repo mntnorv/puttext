@@ -1,6 +1,6 @@
 require_relative '../po_entry'
 
-module RXGetText::Parser
+module PutText::Parser
   class Base
     # Thrown when any error parsing a file occurs
     class ParseError < StandardError; end

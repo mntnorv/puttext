@@ -1,10 +1,10 @@
 require_relative 'parser/ruby'
 require_relative 'po_file'
 
-module RXGetText
+module PutText
   class Extractor
     PARSERS = {
-      ruby: RXGetText::Parser::Ruby.new
+      ruby: PutText::Parser::Ruby.new
     }.freeze
 
     EXTENSIONS = {

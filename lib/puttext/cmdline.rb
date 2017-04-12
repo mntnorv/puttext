@@ -1,17 +1,17 @@
 require_relative 'extractor'
 require 'optparse'
 
-module RXGetText
+module PutText
   class Cmdline
-    USAGE_TEXT = 'Usage: rxgettext LOCATION [options]'
+    USAGE_TEXT = 'Usage: puttext LOCATION [options]'
 
-    # Run the commmand line tool rxgettext.
+    # Run the commmand line tool puttext.
     # @param [Array<String>] args the command line arguments.
     def self.run(args)
       new.run(args)
     end
 
-    # Run the commmand line tool rxgettext.
+    # Run the commmand line tool puttext.
     # @param [Array<String>] args the command line arguments.
     def run(args)
       options = parse_args(args)

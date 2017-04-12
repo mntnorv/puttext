@@ -1,4 +1,4 @@
-module RXGetText
+module PutText
   class POEntry
     NS_SEPARATOR = '|'
 

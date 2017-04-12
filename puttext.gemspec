@@ -2,13 +2,13 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
-  s.name     = 'rxgettext'
+  s.name     = 'puttext'
   s.version  = '0.0.1'
   s.date     = Date.today.to_s
   s.summary  = 'Extract gettext strings from Ruby source'
   s.authors  = ['Mantas Norvaiša']
   s.email    = 'mntnorv@gmail.com'
-  s.homepage = 'https://github.com/mntnorv/rxgettext'
+  s.homepage = 'https://github.com/mntnorv/puttext'
   s.license  = 'MIT'
 
   s.files         = `git ls-files`.split

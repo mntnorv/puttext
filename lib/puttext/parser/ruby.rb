@@ -7,7 +7,7 @@ require 'parser/current'
 Parser::Builders::Default.emit_lambda = true
 Parser::Builders::Default.emit_procarg0 = true
 
-module RXGetText::Parser
+module PutText::Parser
   class Ruby < Base
     extensions %w(.rb)
 
@@ -78,7 +78,7 @@ module RXGetText::Parser
         entry_attrs[name] = param
       end
 
-      RXGetText::POEntry.new(entry_attrs)
+      PutText::POEntry.new(entry_attrs)
     end
 
     def find_strings_in_ast(ast_node)

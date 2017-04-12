@@ -3,6 +3,7 @@
 AllCops:
   Exclude:
     - 'spec/fixtures/**/*'
+  TargetRubyVersion: 2.0
 
 Documentation:
   Enabled: false
@@ -23,3 +24,6 @@ Style/EndOfLine:
 
 Style/NumericPredicate:
   EnforcedStyle: comparison
+
+Style/IndentHeredoc:
+  EnforcedStyle: unindent

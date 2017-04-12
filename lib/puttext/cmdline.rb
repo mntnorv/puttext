@@ -5,7 +5,7 @@ require 'optparse'
 
 module PutText
   class Cmdline
-    USAGE_TEXT = 'Usage: puttext LOCATION [options]'
+    USAGE_TEXT = 'Usage: puttext LOCATION [options]'.freeze
 
     # Run the commmand line tool puttext.
     # @param [Array<String>] args the command line arguments.

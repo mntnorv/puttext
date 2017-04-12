@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'unindent'
 
 describe PutText::POEntry do
   describe '#initialize' do
@@ -236,7 +237,7 @@ describe PutText::POEntry do
       let(:entry) { described_class.new(msgid: 'An error occurred!') }
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<~PO)
+        expect(entry.to_s).to eq(<<-PO.unindent)
           msgid "An error occurred!"
           msgstr ""
         PO
@@ -252,7 +253,7 @@ describe PutText::POEntry do
       end
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<~PO)
+        expect(entry.to_s).to eq(<<-PO.unindent)
           msgid "An error occurred!"
           msgid_plural "%d errors occurred!"
           msgstr[0] ""
@@ -270,7 +271,7 @@ describe PutText::POEntry do
       end
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<~PO)
+        expect(entry.to_s).to eq(<<-PO.unindent)
           msgctxt "Error modal"
           msgid "An error occurred!"
           msgstr ""
@@ -287,7 +288,7 @@ describe PutText::POEntry do
       end
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<~PO)
+        expect(entry.to_s).to eq(<<-PO.unindent)
           #: errors.rb:15 another/file.rb:168
           msgid "An error occurred!"
           msgstr ""
@@ -303,7 +304,7 @@ describe PutText::POEntry do
       end
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<~PO)
+        expect(entry.to_s).to eq(<<-PO.unindent)
           msgid ""
           "An error occurred!\\n"
           "Horrible error description"
@@ -316,7 +317,7 @@ describe PutText::POEntry do
       let(:entry) { described_class.new(msgid: "\tAn \"error\" occurred!") }
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<~PO)
+        expect(entry.to_s).to eq(<<-PO.unindent)
           msgid "\\tAn \\"error\\" occurred!"
           msgstr ""
         PO

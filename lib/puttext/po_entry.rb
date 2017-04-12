@@ -2,7 +2,7 @@
 
 module PutText
   class POEntry
-    NS_SEPARATOR = '|'
+    NS_SEPARATOR = '|'.freeze
 
     PO_C_STYLE_ESCAPES = {
       "\n" => '\\n',

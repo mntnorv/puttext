@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe PutText::POEntry do
@@ -176,11 +178,13 @@ describe PutText::POEntry do
     let(:merged_entry) { entry.merge(other_entry) }
 
     it 'merges references of both entries' do
-      expect(merged_entry.references).to eq([
-        'errors.rb:15',
-        'subfolder/random_file.rb:5',
-        'subfolder/another_file.rb:168'
-      ])
+      expect(merged_entry.references).to eq(
+        [
+          'errors.rb:15',
+          'subfolder/random_file.rb:5',
+          'subfolder/another_file.rb:168'
+        ]
+      )
     end
   end
 
@@ -220,7 +224,7 @@ describe PutText::POEntry do
       end
     end
 
-    context 'comparing keys of entries with the same message but different contexts' do
+    context 'comparing keys of entries with same message, different contexts' do
       it 'returns different keys' do
         expect(entry_1.unique_key).not_to eq(ctxt_entry_1.unique_key)
       end
@@ -232,9 +236,9 @@ describe PutText::POEntry do
       let(:entry) { described_class.new(msgid: 'An error occurred!') }
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<-PO)
-msgid "An error occurred!"
-msgstr ""
+        expect(entry.to_s).to eq(<<~PO)
+          msgid "An error occurred!"
+          msgstr ""
         PO
       end
     end
@@ -248,11 +252,11 @@ msgstr ""
       end
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<-PO)
-msgid "An error occurred!"
-msgid_plural "%d errors occurred!"
-msgstr[0] ""
-msgstr[1] ""
+        expect(entry.to_s).to eq(<<~PO)
+          msgid "An error occurred!"
+          msgid_plural "%d errors occurred!"
+          msgstr[0] ""
+          msgstr[1] ""
         PO
       end
     end
@@ -266,10 +270,10 @@ msgstr[1] ""
       end
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<-PO)
-msgctxt "Error modal"
-msgid "An error occurred!"
-msgstr ""
+        expect(entry.to_s).to eq(<<~PO)
+          msgctxt "Error modal"
+          msgid "An error occurred!"
+          msgstr ""
         PO
       end
     end
@@ -283,10 +287,10 @@ msgstr ""
       end
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<-PO)
-#: errors.rb:15 another/file.rb:168
-msgid "An error occurred!"
-msgstr ""
+        expect(entry.to_s).to eq(<<~PO)
+          #: errors.rb:15 another/file.rb:168
+          msgid "An error occurred!"
+          msgstr ""
         PO
       end
     end
@@ -299,11 +303,11 @@ msgstr ""
       end
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<-PO)
-msgid ""
-"An error occurred!\\n"
-"Horrible error description"
-msgstr ""
+        expect(entry.to_s).to eq(<<~PO)
+          msgid ""
+          "An error occurred!\\n"
+          "Horrible error description"
+          msgstr ""
         PO
       end
     end
@@ -312,9 +316,9 @@ msgstr ""
       let(:entry) { described_class.new(msgid: "\tAn \"error\" occurred!") }
 
       it 'generates correct string' do
-        expect(entry.to_s).to eq(<<-PO)
-msgid "\\tAn \\"error\\" occurred!"
-msgstr ""
+        expect(entry.to_s).to eq(<<~PO)
+          msgid "\\tAn \\"error\\" occurred!"
+          msgstr ""
         PO
       end
     end

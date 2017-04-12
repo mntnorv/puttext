@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'extractor'
 require 'optparse'
 
@@ -18,19 +20,27 @@ module PutText
       po_file = Extractor.new.extract(options[:path])
 
       if options[:output_file]
-        File.open(options[:output_file], 'w') do |f|
-          po_file.write_to(f)
-        end
+        with_output_file(options[:output_file]) { |f| po_file.write_to(f) }
       else
         po_file.write_to(STDOUT)
       end
     rescue => e
-      puts "error: #{e.message}"
-      puts e.backtrace
-      exit 1
+      error(e)
     end
 
     private
+
+    def with_output_file(path)
+      File.open(path, 'w') do |f|
+        yield(f)
+      end
+    end
+
+    def error(exception)
+      puts "error: #{exception.message}"
+      puts exception.backtrace
+      exit 1
+    end
 
     def parse_args(args)
       args_left, options = parse_options(args)

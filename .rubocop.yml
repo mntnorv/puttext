@@ -1,0 +1,25 @@
+# This is the configuration used to check the rubocop source code.
+
+AllCops:
+  Exclude:
+    - 'spec/fixtures/**/*'
+
+Documentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Style/EndOfLine:
+  Enabled: false
+
+Style/NumericPredicate:
+  EnforcedStyle: comparison

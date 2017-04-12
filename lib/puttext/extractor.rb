@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'parser/ruby'
 require_relative 'po_file'
 
@@ -20,7 +22,7 @@ module PutText
 
     # Check if a file is supported by the parser, based on its extension.
     # @return [Boolean] whether the file is supported.
-    def self.is_file_supported?(path)
+    def self.file_supported?(path)
       EXTENSIONS.keys.any? { |ext| path.end_with?(ext) }
     end
 
@@ -51,7 +53,7 @@ module PutText
         return PARSERS[lang] if path.end_with?(ext)
       end
 
-      raise UnsupportedFileError, 'file not supported: %{path}' % { path: path }
+      raise UnsupportedFileError, format('file not supported: %s', path)
     end
 
     def parse_files(files)
@@ -64,9 +66,9 @@ module PutText
       POFile.new(entries)
     end
 
-    def filter_files(files, path)
+    def filter_files(files, _path)
       supported_files = files.select do |file|
-        self.class.is_file_supported?(file)
+        self.class.file_supported?(file)
       end
 
       supported_files
@@ -80,8 +82,7 @@ module PutText
       elsif File.directory?(path)
         files = Dir.glob(File.join(path, '**/*'))
       else
-        raise NoSuchFileError,
-          'no such file or directory: %{path}' % { path: path }
+        raise NoSuchFileError, format('no such file or directory: %s', path)
       end
 
       files

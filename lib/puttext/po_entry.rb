@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 module PutText
   class POEntry
     NS_SEPARATOR = '|'
 
     PO_C_STYLE_ESCAPES = {
-      "\n" => "\\n",
-      "\r" => "\\r",
-      "\t" => "\\t",
-      "\\" => "\\\\",
-      "\"" => "\\\""
+      "\n" => '\\n',
+      "\r" => '\\r',
+      "\t" => '\\t',
+      '\\' => '\\\\',
+      '"' => '\\"'
     }.freeze
 
     attr_reader :msgid
@@ -42,7 +44,7 @@ module PutText
     # Convert the entry to a string representation, to be written to a .po file
     # @return [String] a string representation of the entry.
     def to_s
-      str = ''
+      str = String.new('')
 
       # Add comments
       str = add_comment(str, ':', @references.join(' ')) if references?
@@ -50,15 +52,8 @@ module PutText
       # Add id and context
       str = add_string(str, 'msgctxt', @msgctxt) if @msgctxt
       str = add_string(str, 'msgid', @msgid)
-
-      # Add plural id and empty translations
-      if plural?
-        str = add_string(str, 'msgid_plural', @msgid_plural)
-        str = add_string(str, 'msgstr[0]', '')
-        str = add_string(str, 'msgstr[1]', '')
-      else
-        str = add_string(str, 'msgstr', '')
-      end
+      str = add_string(str, 'msgid_plural', @msgid_plural) if plural?
+      str = add_translations(str)
 
       str
     end
@@ -66,7 +61,7 @@ module PutText
     # Check if the entry has any references.
     # @return [Boolean] whether the entry has any references.
     def references?
-      @references.length > 0
+      !@references.empty?
     end
 
     # Check if the entry has a plural form.
@@ -97,7 +92,7 @@ module PutText
 
     def extract_context(str, separator)
       parts = str.rpartition(separator)
-      return parts[2], parts[0] == '' ? nil : parts[0]
+      [parts[2], parts[0] == '' ? nil : parts[0]]
     end
 
     def add_comment(str, comment_type, value)
@@ -119,38 +114,58 @@ module PutText
       str << "\n"
     end
 
+    def add_translations(str)
+      if plural?
+        add_string(str, 'msgstr[0]', '')
+        add_string(str, 'msgstr[1]', '')
+      else
+        add_string(str, 'msgstr', '')
+      end
+
+      str
+    end
+
     def string_to_po(str)
       lines = str.split("\n", -1)
 
-      if lines.length == 0
+      if lines.empty?
         '""'
       elsif lines.length == 1
         "\"#{po_escape_string(lines[0])}\""
       else
-        po_str = "\"\""
-
-        lines.each_with_index do |line, index|
-          next if (index == lines.length - 1) && line.empty?
-
-          po_str << "\n\""
-          po_str << po_escape_string(line)
-          po_str << "\\n" unless index == lines.length - 1
-          po_str << '"'
-        end
-
-        po_str
+        multiline_string_to_po(lines)
       end
     end
 
+    def multiline_string_to_po(str_lines)
+      po_str = String.new('""')
+
+      str_lines.each_with_index do |line, index|
+        last = index == str_lines.length - 1
+        add_multiline_str_part(po_str, line, last)
+      end
+
+      po_str
+    end
+
+    def add_multiline_str_part(str, part, last)
+      return if last && part.empty?
+
+      str << "\n\""
+      str << po_escape_string(part)
+      str << '\\n' unless last
+      str << '"'
+    end
+
     def po_escape_string(str)
-      encoded = ''
+      encoded = String.new('')
 
       str.each_char do |char|
-        if PO_C_STYLE_ESCAPES[char]
-          encoded << PO_C_STYLE_ESCAPES[char]
-        else
-          encoded << char
-        end
+        encoded << if PO_C_STYLE_ESCAPES[char]
+                     PO_C_STYLE_ESCAPES[char]
+                   else
+                     char
+                   end
       end
 
       encoded

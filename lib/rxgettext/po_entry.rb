@@ -120,17 +120,22 @@ module RXGetText
     end
 
     def string_to_po(str)
-      lines = po_escape_string(str).split('\n')
+      lines = str.split("\n", -1)
 
-      if lines.length < 2
-        "\"#{lines[0]}\""
+      if lines.length == 0
+        '""'
+      elsif lines.length == 1
+        "\"#{po_escape_string(lines[0])}\""
       else
         po_str = "\"\""
 
-        lines.each do |line|
+        lines.each_with_index do |line, index|
+          next if (index == lines.length - 1) && line.empty?
+
           po_str << "\n\""
-          po_str << line
-          po_str << "\\n\""
+          po_str << po_escape_string(line)
+          po_str << "\\n" unless index == lines.length - 1
+          po_str << '"'
         end
 
         po_str

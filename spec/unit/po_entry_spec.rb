@@ -226,4 +226,97 @@ describe RXGetText::POEntry do
       end
     end
   end
+
+  describe '#to_s' do
+    context 'with a simple PO entry' do
+      let(:entry) { described_class.new(msgid: 'An error occurred!') }
+
+      it 'generates correct string' do
+        expect(entry.to_s).to eq(<<-PO)
+msgid "An error occurred!"
+msgstr ""
+        PO
+      end
+    end
+
+    context 'with a pluralized entry' do
+      let(:entry) do
+        described_class.new(
+          msgid: 'An error occurred!',
+          msgid_plural: '%d errors occurred!'
+        )
+      end
+
+      it 'generates correct string' do
+        expect(entry.to_s).to eq(<<-PO)
+msgid "An error occurred!"
+msgid_plural "%d errors occurred!"
+msgstr[0] ""
+msgstr[1] ""
+        PO
+      end
+    end
+
+    context 'with an entry with a context' do
+      let(:entry) do
+        described_class.new(
+          msgid: 'An error occurred!',
+          msgctxt: 'Error modal'
+        )
+      end
+
+      it 'generates correct string' do
+        expect(entry.to_s).to eq(<<-PO)
+msgctxt "Error modal"
+msgid "An error occurred!"
+msgstr ""
+        PO
+      end
+    end
+
+    context 'with an entry with references' do
+      let(:entry) do
+        described_class.new(
+          msgid: 'An error occurred!',
+          references: ['errors.rb:15', 'another/file.rb:168']
+        )
+      end
+
+      it 'generates correct string' do
+        expect(entry.to_s).to eq(<<-PO)
+#: errors.rb:15 another/file.rb:168
+msgid "An error occurred!"
+msgstr ""
+        PO
+      end
+    end
+
+    context 'with multiline msgid' do
+      let(:entry) do
+        described_class.new(
+          msgid: "An error occurred!\nHorrible error description"
+        )
+      end
+
+      it 'generates correct string' do
+        expect(entry.to_s).to eq(<<-PO)
+msgid ""
+"An error occurred!\\n"
+"Horrible error description"
+msgstr ""
+        PO
+      end
+    end
+
+    context 'with characters in msgid that need to be escaped' do
+      let(:entry) { described_class.new(msgid: "\tAn \"error\" occurred!") }
+
+      it 'generates correct string' do
+        expect(entry.to_s).to eq(<<-PO)
+msgid "\\tAn \\"error\\" occurred!"
+msgstr ""
+        PO
+      end
+    end
+  end
 end

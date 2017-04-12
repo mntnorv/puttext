@@ -131,4 +131,27 @@ describe RXGetText::POEntry do
       end
     end
   end
+
+  describe '#plural?' do
+    context 'entry is a pluralized entry' do
+      let(:entry) do
+        described_class.new(
+          msgid: 'An error occurred!',
+          msgid_plural: '%d errors occurred!'
+        )
+      end
+
+      it 'returns true' do
+        expect(entry.plural?).to be true
+      end
+    end
+
+    context 'entry is not pluralized entry' do
+      let(:entry) { described_class.new(msgid: 'An error occurred!') }
+
+      it 'returns false' do
+        expect(entry.plural?).to be false
+      end
+    end
+  end
 end

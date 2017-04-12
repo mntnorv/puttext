@@ -30,9 +30,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  puttext!
   rake
   rspec (~> 3.5)
-  puttext!
 
 BUNDLED WITH
    1.14.6

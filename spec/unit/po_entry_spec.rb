@@ -108,4 +108,27 @@ describe RXGetText::POEntry do
       end
     end
   end
+
+  describe '#references?' do
+    context 'entry has references' do
+      let(:entry) do
+        described_class.new(
+          msgid: 'An error occurred!',
+          references: ['errors.rb:15']
+        )
+      end
+
+      it 'returns true' do
+        expect(entry.references?).to be true
+      end
+    end
+
+    context 'entry does not have references' do
+      let(:entry) { described_class.new(msgid: 'An error occurred!') }
+
+      it 'returns false' do
+        expect(entry.references?).to be false
+      end
+    end
+  end
 end

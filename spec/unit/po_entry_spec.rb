@@ -183,4 +183,47 @@ describe RXGetText::POEntry do
       ])
     end
   end
+
+  describe '#unique_key' do
+    let(:entry_1) { described_class.new(msgid: 'An error occurred!') }
+    let(:entry_2) { described_class.new(msgid: 'Another message') }
+
+    let(:ctxt_entry_1) do
+      described_class.new(
+        msgid: 'An error occurred!',
+        msgctxt: 'Error modal'
+      )
+    end
+
+    let(:ctxt_entry_2) do
+      described_class.new(
+        msgid: 'An error occurred!',
+        msgctxt: 'Error modal'
+      )
+    end
+
+    context 'comparing the key from the same entry' do
+      it 'returns the same key' do
+        expect(entry_1.unique_key).to eq(entry_1.unique_key)
+      end
+    end
+
+    context 'comparing keys of entries with the same message and context' do
+      it 'returns the same key' do
+        expect(ctxt_entry_1.unique_key).to eq(ctxt_entry_2.unique_key)
+      end
+    end
+
+    context 'comparing keys of entries with different messages' do
+      it 'returns different keys' do
+        expect(entry_1.unique_key).not_to eq(entry_2.unique_key)
+      end
+    end
+
+    context 'comparing keys of entries with the same message but different contexts' do
+      it 'returns different keys' do
+        expect(entry_1.unique_key).not_to eq(ctxt_entry_1.unique_key)
+      end
+    end
+  end
 end

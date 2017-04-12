@@ -18,4 +18,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.0.0'
 
   s.add_runtime_dependency('parser', '>= 2.4.0.0', '< 3.0')
+
+  s.add_development_dependency('rake')
+  s.add_development_dependency('rspec', ['~> 3.5'])
 end

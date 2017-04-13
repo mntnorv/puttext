@@ -4,6 +4,8 @@ require 'spec_helper'
 require 'unindent'
 
 describe PutText::Parser::Ruby do
+  it_behaves_like 'PutText::Parser::Base'
+
   describe '#strings_from_source' do
     context 'passing Ruby code with gettext usages' do
       let(:ruby_code) do

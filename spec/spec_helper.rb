@@ -7,3 +7,6 @@ SimpleCov.start do
 end
 
 require 'puttext'
+
+# Load shared specs.
+Dir[File.join(File.dirname(__FILE__), 'shared/**/*.rb')].each { |f| require f }

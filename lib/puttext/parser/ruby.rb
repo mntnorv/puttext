@@ -78,7 +78,7 @@ module PutText
           next if name == :_ # skip parameters named _
 
           param = string_from_ast_node(ast_node.children[index + 2])
-          entry_attrs[name] = param
+          entry_attrs[name] = param if param
         end
 
         PutText::POEntry.new(entry_attrs)

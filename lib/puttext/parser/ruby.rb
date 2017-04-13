@@ -28,12 +28,12 @@ module PutText
       }.freeze
 
       PARAMS = {
-        regular:            %i[msgid],
-        plural:             %i[msgid msgid_plural],
-        context:            %i[msgctxt msgid],
-        context_plural:     %i[msgctxt msgid msgid_plural],
-        context_sep:        %i[msgid separator],
-        context_sep_plural: %i[msgid msgid_plural _ separator]
+        regular:            %i(msgid),
+        plural:             %i(msgid msgid_plural),
+        context:            %i(msgctxt msgid),
+        context_plural:     %i(msgctxt msgid msgid_plural),
+        context_sep:        %i(msgid separator),
+        context_sep_plural: %i(msgid msgid_plural _ separator)
       }.freeze
 
       def initialize

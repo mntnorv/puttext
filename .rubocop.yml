@@ -24,6 +24,3 @@ Style/EndOfLine:
 
 Style/NumericPredicate:
   EnforcedStyle: comparison
-
-Style/IndentHeredoc:
-  EnforcedStyle: unindent

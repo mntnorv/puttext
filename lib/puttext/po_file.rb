@@ -28,6 +28,10 @@ module PutText
       end
     end
 
+    def ==(other)
+      @entries == other.entries
+    end
+
     private
 
     def deduplicate

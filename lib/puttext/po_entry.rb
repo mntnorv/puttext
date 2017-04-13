@@ -88,6 +88,13 @@ module PutText
       self
     end
 
+    def ==(other)
+      @msgid == other.msgid &&
+        @msgid_plural == other.msgid_plural &&
+        @msgctxt == other.msgctxt &&
+        @references == other.references
+    end
+
     private
 
     def extract_context(str, separator)

@@ -103,8 +103,10 @@ describe PutText::Extractor do
         end
 
         it 'returns a POFile with entries extracted from the files' do
+          dup_entry = entry.dup
+
           expect(subject.extract(fixtures_path)).to eq(
-            PutText::POFile.new([entry, entry, entry, entry])
+            PutText::POFile.new([dup_entry, dup_entry, dup_entry, dup_entry])
           )
         end
       end

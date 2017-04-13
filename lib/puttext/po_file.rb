@@ -29,7 +29,7 @@ module PutText
     end
 
     def ==(other)
-      @entries == other.entries
+      @entries.sort == other.entries.sort
     end
 
     private

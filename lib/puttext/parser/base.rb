@@ -8,6 +8,12 @@ module PutText
     class ParseError < StandardError; end
 
     class Base
+      # Checks if this parser is supported.
+      # @return [Boolean] whether this parser is supported.
+      def self.supported?
+        true
+      end
+
       # Parse gettext strings from a file in the path.
       # @param [String] path the path of the file to parse.
       # @return [Array<POEntry>] an array of POEntry objects extracted

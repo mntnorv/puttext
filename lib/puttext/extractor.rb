@@ -1,17 +1,34 @@
 # frozen_string_literal: true
 
 require_relative 'parser/ruby'
+require_relative 'parser/slim'
 require_relative 'po_file'
 
 module PutText
   class Extractor
     PARSERS = {
-      ruby: PutText::Parser::Ruby.new
+      ruby: PutText::Parser::Ruby,
+      slim: PutText::Parser::Slim
     }.freeze
 
     EXTENSIONS = {
-      '.rb' => :ruby
+      '.rb'   => :ruby,
+      '.slim' => :slim
     }.freeze
+
+    # Filter out supported parsers
+    SUPPORTED_PARSERS = {}
+    PARSERS.each do |name, parser_class|
+      next unless parser_class.supported?
+      SUPPORTED_PARSERS[name] = parser_class.new
+    end
+
+    # Filter out supported file extensions
+    SUPPORTED_EXTENSIONS = {}
+    EXTENSIONS.each do |ext, parser|
+      next unless SUPPORTED_PARSERS[parser]
+      SUPPORTED_EXTENSIONS[ext] = parser
+    end
 
     # Thrown when a given file cannot be parsed, because its format or language
     # is not supported.
@@ -23,7 +40,7 @@ module PutText
     # Check if a file is supported by the parser, based on its extension.
     # @return [Boolean] whether the file is supported.
     def self.file_supported?(path)
-      EXTENSIONS.keys.any? { |ext| path.end_with?(ext) }
+      SUPPORTED_EXTENSIONS.keys.any? { |ext| path.end_with?(ext) }
     end
 
     # Extract strings from files in the given path.
@@ -49,8 +66,8 @@ module PutText
     private
 
     def parser_by_path(path)
-      EXTENSIONS.each do |ext, lang|
-        return PARSERS[lang] if path.end_with?(ext)
+      SUPPORTED_EXTENSIONS.each do |ext, lang|
+        return SUPPORTED_PARSERS[lang] if path.end_with?(ext)
       end
 
       raise UnsupportedFileError, format('file not supported: %s', path)

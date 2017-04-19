@@ -6,29 +6,10 @@ require_relative 'po_file'
 
 module PutText
   class Extractor
-    PARSERS = {
-      ruby: PutText::Parser::Ruby,
-      slim: PutText::Parser::Slim
-    }.freeze
-
     EXTENSIONS = {
-      '.rb'   => :ruby,
-      '.slim' => :slim
+      '.rb'   => 'Ruby',
+      '.slim' => 'Slim'
     }.freeze
-
-    # Filter out supported parsers
-    SUPPORTED_PARSERS = {}.freeze
-    PARSERS.each do |name, parser_class|
-      next unless parser_class.supported?
-      SUPPORTED_PARSERS[name] = parser_class.new
-    end
-
-    # Filter out supported file extensions
-    SUPPORTED_EXTENSIONS = {}.freeze
-    EXTENSIONS.each do |ext, parser|
-      next unless SUPPORTED_PARSERS[parser]
-      SUPPORTED_EXTENSIONS[ext] = parser
-    end
 
     # Thrown when a given file cannot be parsed, because its format or language
     # is not supported.
@@ -37,10 +18,23 @@ module PutText
     # Thrown when the path passed to #extract does not exist.
     class NoSuchFileError < StandardError; end
 
+    # Return the class of a parser by its name
+    # @param [String] name the name of the parser.
+    # @return [Class] the classof the parser
+    def self.parser_class_by_name(name)
+      PutText::Parser.const_get(name)
+    end
+
     # Check if a file is supported by the parser, based on its extension.
     # @return [Boolean] whether the file is supported.
     def self.file_supported?(path)
-      SUPPORTED_EXTENSIONS.keys.any? { |ext| path.end_with?(ext) }
+      EXTENSIONS.each do |ext, parser_name|
+        next unless path.end_with?(ext)
+        next unless parser_class_by_name(parser_name)
+        return true
+      end
+
+      false
     end
 
     # Extract strings from files in the given path.
@@ -65,9 +59,21 @@ module PutText
 
     private
 
+    def parser_by_name(name)
+      return @parsers[name] if @parsers && @parsers[name]
+
+      @parsers ||= {}
+      parser_class = self.class.parser_class_by_name(name)
+      return unless parser_class
+
+      parser = parser_class.new
+      @parsers[name] = parser
+      parser
+    end
+
     def parser_by_path(path)
-      SUPPORTED_EXTENSIONS.each do |ext, lang|
-        return SUPPORTED_PARSERS[lang] if path.end_with?(ext)
+      EXTENSIONS.each do |ext, name|
+        return parser_by_name(name) if path.end_with?(ext)
       end
 
       raise UnsupportedFileError, format('file not supported: %s', path)

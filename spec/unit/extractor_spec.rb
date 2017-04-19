@@ -4,20 +4,6 @@ require 'spec_helper'
 require 'unindent'
 
 describe PutText::Extractor do
-  describe '::SUPPORTED_PARSERS' do
-    it 'has a Ruby parser at [:ruby]' do
-      expect(described_class::SUPPORTED_PARSERS[:ruby]).to be_a(
-        PutText::Parser::Ruby
-      )
-    end
-
-    it 'has a Slim parser at [:slim]' do
-      expect(described_class::SUPPORTED_PARSERS[:slim]).to be_a(
-        PutText::Parser::Slim
-      )
-    end
-  end
-
   describe '.file_supported?(path)' do
     context 'passing a file with a supported extension' do
       it 'returns true' do
@@ -35,17 +21,17 @@ describe PutText::Extractor do
   describe '#extract_from_file' do
     context 'passing a Ruby file' do
       before do
-        allow(described_class::SUPPORTED_PARSERS[:ruby]).to(
+        allow_any_instance_of(PutText::Parser::Ruby).to(
           receive(:strings_from_file).and_return(['stuff'])
         )
       end
 
       it 'uses the Ruby parser to extract strings' do
-        subject.extract_from_file('test/file.rb')
-
-        expect(described_class::SUPPORTED_PARSERS[:ruby]).to(
-          have_received(:strings_from_file).with('test/file.rb')
+        expect_any_instance_of(PutText::Parser::Ruby).to(
+          receive(:strings_from_file).with('test/file.rb')
         )
+
+        subject.extract_from_file('test/file.rb')
       end
 
       it 'returns the results of the #strings_from_file call' do
@@ -55,17 +41,17 @@ describe PutText::Extractor do
 
     context 'passing a Slim file' do
       before do
-        allow(described_class::SUPPORTED_PARSERS[:slim]).to(
+        allow_any_instance_of(PutText::Parser::Slim).to(
           receive(:strings_from_file).and_return(['stuff'])
         )
       end
 
       it 'uses the Slim parser to extract strings' do
-        subject.extract_from_file('test/file.slim')
-
-        expect(described_class::SUPPORTED_PARSERS[:slim]).to(
-          have_received(:strings_from_file).with('test/file.slim')
+        expect_any_instance_of(PutText::Parser::Slim).to(
+          receive(:strings_from_file).with('test/file.slim')
         )
+
+        subject.extract_from_file('test/file.slim')
       end
 
       it 'returns the results of the #strings_from_file call' do

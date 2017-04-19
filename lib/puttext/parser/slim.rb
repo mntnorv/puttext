@@ -49,7 +49,6 @@ module PutText
 
           def count_newlines(body)
             newlines = 0
-
             newlines += 1 if body.first == :newline
 
             body.each do |el|
@@ -60,40 +59,8 @@ module PutText
           end
         end
 
-        class Engine < Temple::Engine
-          define_options pretty: false,
-                         sort_attrs: true,
-                         format: :xhtml,
-                         attr_quote: '"',
-                         merge_attrs: { 'class' => ' ' },
-                         generator: Temple::Generators::StringBuffer,
-                         default_tag: 'div'
-
-          filter :Encoding
-          filter :RemoveBOM
-          use ::Slim::Parser
-          use IgnoreEmbedded
-          use ::Slim::Interpolation
-          use ::Slim::Splat::Filter
-          use ::Slim::DoInserter
-          use ::Slim::EndInserter
-          use ::Slim::Controls
-          html :AttributeSorter
-          html :AttributeMerger
-          use ::Slim::CodeAttributes
-
-          use(:AttributeRemover) do
-            Temple::HTML::AttributeRemover.new(
-              remove_empty_attrs: options[:merge_attrs].keys
-            )
-          end
-
-          html :Pretty
-          filter :Escapable
-          filter :ControlFlow
-          filter :MultiFlattener
-          filter :StaticMerger
-          use(:Generator) { options[:generator] }
+        class Engine < ::Slim::Engine
+          replace ::Slim::Embedded, IgnoreEmbedded
         end
       end
     end

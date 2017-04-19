@@ -16,15 +16,15 @@ describe PutText::Parser::Slim do
         - if condition
           div *{'hash_attr'=>p_('ctx','splat hash attr')}
 
+        coffee:
+          _('should be ignored')
+
         = method_call do
           html
             | inside
             | with interpolations \#{_('text interpolation')}
           # and_also_ruby
           == _('unescaped string')
-
-        coffee:
-          _('should be ignored')
       SLIM
     end
 
@@ -72,14 +72,14 @@ describe PutText::Parser::Slim do
     it 'correctly extracts string from text interpolation' do
       expect(PutText::POEntry).to have_received(:new).with(
         msgid: 'text interpolation',
-        references: ['test.slim:18']
+        references: ['test.slim:21']
       )
     end
 
     it 'correctly extracts string from unescaped Ruby output code' do
       expect(PutText::POEntry).to have_received(:new).with(
         msgid: 'unescaped string',
-        references: ['test.slim:20']
+        references: ['test.slim:23']
       )
     end
   end

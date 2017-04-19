@@ -17,14 +17,14 @@ module PutText
     }.freeze
 
     # Filter out supported parsers
-    SUPPORTED_PARSERS = {}
+    SUPPORTED_PARSERS = {}.freeze
     PARSERS.each do |name, parser_class|
       next unless parser_class.supported?
       SUPPORTED_PARSERS[name] = parser_class.new
     end
 
     # Filter out supported file extensions
-    SUPPORTED_EXTENSIONS = {}
+    SUPPORTED_EXTENSIONS = {}.freeze
     EXTENSIONS.each do |ext, parser|
       next unless SUPPORTED_PARSERS[parser]
       SUPPORTED_EXTENSIONS[ext] = parser

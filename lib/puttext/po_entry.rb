@@ -15,6 +15,8 @@ module PutText
     attr_reader :msgid
     attr_reader :msgid_plural
     attr_reader :msgctxt
+    attr_reader :msgstr
+    attr_reader :flags
     attr_reader :references
 
     # Create a new POEntry
@@ -26,8 +28,10 @@ module PutText
     # @option attrs [String] :msgid_plural the pluralized id of the string (the
     #   pluralized string that needs to be translated).
     # @option attrs [String] :msgctxt the context of the string.
+    # @option attrs [Array<String>] :msgstr the translated strings.
     # @option attrs [Array<String>] :references a list of files with line
     #   numbers, pointing to where the string was found.
+    # @option attrs [Array<String>] :flags a list of flags for this entry.
     # @option attrs [String] :separator the separator of context from id in
     #   :msgid.
     def initialize(attrs)
@@ -38,7 +42,9 @@ module PutText
       @msgid        = id
       @msgctxt      = attrs[:msgctxt] || ctx
       @msgid_plural = attrs[:msgid_plural]
+      @msgstr       = Array(attrs[:msgstr] || '')
       @references   = attrs[:references] || []
+      @flags        = attrs[:flags] || []
     end
 
     # Convert the entry to a string representation, to be written to a .po file
@@ -48,6 +54,7 @@ module PutText
 
       # Add comments
       str = add_comment(str, ':', @references.join(' ')) if references?
+      str = add_comment(str, ',', @flags.join("\n")) if flags?
 
       # Add id and context
       str = add_string(str, 'msgctxt', @msgctxt) if @msgctxt
@@ -62,6 +69,12 @@ module PutText
     # @return [Boolean] whether the entry has any references.
     def references?
       !@references.empty?
+    end
+
+    # Check if the entry has any flags.
+    # @return [Boolean] whether the entry has any flags.
+    def flags?
+      !@flags.empty?
     end
 
     # Check if the entry has a plural form.
@@ -123,10 +136,11 @@ module PutText
 
     def add_translations(str)
       if plural?
-        add_string(str, 'msgstr[0]', '')
-        add_string(str, 'msgstr[1]', '')
+        @msgstr.each_with_index do |msgstr, index|
+          add_string(str, "msgstr[#{index}]", msgstr)
+        end
       else
-        add_string(str, 'msgstr', '')
+        add_string(str, 'msgstr', @msgstr.first)
       end
 
       str

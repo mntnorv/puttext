@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'unindent'
+require_relative 'po_entry'
+
 module PutText
   class POFile
     attr_accessor :entries
@@ -9,6 +12,18 @@ module PutText
     #   be placed in this file.
     def initialize(entries)
       @entries = entries
+
+      now = Time.now.strftime('%Y-%m-%d %H:%M%z')
+
+      @header_entry = POEntry.new(
+        flags: ['fuzzy'],
+        msgid: '',
+        msgstr: <<-STRING.unindent
+          POT-Creation-Date: #{now}
+          MIME-Version: 1.0
+          Content-Type: text/plain; charset=UTF-8
+        STRING
+      )
     end
 
     def to_s
@@ -22,8 +37,10 @@ module PutText
     def write_to(io)
       deduplicate
 
-      @entries.each_with_index do |entry, index|
-        io.write("\n") unless index == 0
+      io.write(@header_entry.to_s)
+
+      @entries.each do |entry|
+        io.write("\n")
         io.write(entry.to_s)
       end
     end

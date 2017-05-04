@@ -135,6 +135,29 @@ describe PutText::POEntry do
     end
   end
 
+  describe '#flags?' do
+    context 'entry has flags' do
+      let(:entry) do
+        described_class.new(
+          msgid: 'An error occurred!',
+          flags: ['fuzzy']
+        )
+      end
+
+      it 'returns true' do
+        expect(entry.flags?).to be true
+      end
+    end
+
+    context 'entry does not have flags' do
+      let(:entry) { described_class.new(msgid: 'An error occurred!') }
+
+      it 'returns false' do
+        expect(entry.flags?).to be false
+      end
+    end
+  end
+
   describe '#plural?' do
     context 'entry is a pluralized entry' do
       let(:entry) do
@@ -257,7 +280,6 @@ describe PutText::POEntry do
           msgid "An error occurred!"
           msgid_plural "%d errors occurred!"
           msgstr[0] ""
-          msgstr[1] ""
         PO
       end
     end

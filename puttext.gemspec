@@ -4,7 +4,7 @@ require 'date'
 
 Gem::Specification.new do |s|
   s.name     = 'puttext'
-  s.version  = '0.1.1'
+  s.version  = '0.2.0'
   s.date     = Date.today.to_s
   s.summary  = 'Extract gettext strings from Ruby source'
   s.authors  = ['Mantas Norvaiša']
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.0.0'
 
   s.add_runtime_dependency('parser', '>= 2.4.0.0', '< 3.0')
+  s.add_runtime_dependency('unindent')
 
   # Optional dependencies at runtime, required for development
   s.add_development_dependency('slim', '~> 3.0')
@@ -28,7 +29,7 @@ Gem::Specification.new do |s|
 
   # Testing
   s.add_development_dependency('rspec', '~> 3.5')
-  s.add_development_dependency('unindent')
+  s.add_development_dependency('timecop')
 
   # Linters and code policies
   s.add_development_dependency('rubocop', '~> 0.46.0')

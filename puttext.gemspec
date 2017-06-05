@@ -4,7 +4,7 @@ require 'date'
 
 Gem::Specification.new do |s|
   s.name     = 'puttext'
-  s.version  = '0.2.0'
+  s.version  = '0.2.1'
   s.date     = Date.today.to_s
   s.summary  = 'Extract gettext strings from Ruby source'
   s.authors  = ['Mantas Norvaiša']

@@ -65,4 +65,25 @@ describe PutText::POFile do
       PO
     end
   end
+
+  describe '#merge' do
+    let(:entry_1) { PutText::POEntry.new(msgid: 'One error occurred') }
+    let(:entry_2) { PutText::POEntry.new(msgid: 'Another error occurred') }
+    let(:file_1) { described_class.new([entry_1]) }
+    let(:file_2) { described_class.new([entry_2]) }
+
+    context 'POFile is passed as an argument' do
+      before { file_1.merge(file_2) }
+
+      it 'merges the contents of two POFiles' do
+        expect(file_1.entries).to contain_exactly(entry_1, entry_2)
+      end
+    end
+
+    context 'an object that is not a POFile is passed as an argument' do
+      it 'raises an ArgumentError' do
+        expect { file_1.merge('string') }.to raise_error(ArgumentError)
+      end
+    end
+  end
 end

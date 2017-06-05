@@ -12,14 +12,11 @@ module PutText
     #   be placed in this file.
     def initialize(entries)
       @entries = entries
-
-      now = Time.now.strftime('%Y-%m-%d %H:%M%z')
-
       @header_entry = POEntry.new(
         flags: ['fuzzy'],
         msgid: '',
         msgstr: <<-STRING.unindent
-          POT-Creation-Date: #{now}
+          POT-Creation-Date: #{Time.now.strftime('%Y-%m-%d %H:%M%z')}
           MIME-Version: 1.0
           Content-Type: text/plain; charset=UTF-8
         STRING
@@ -43,6 +40,16 @@ module PutText
         io.write("\n")
         io.write(entry.to_s)
       end
+    end
+
+    # Merge the contents of another POFile to this POFile.
+    # @param [POFile] other_file the file to merge the contents of to this file.
+    def merge(other_file)
+      unless other_file.is_a?(POFile)
+        raise ArgumentError, 'argument must be a PutText::POFile'
+      end
+
+      @entries += other_file.entries
     end
 
     def ==(other)

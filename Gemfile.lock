@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    puttext (0.2.0)
+    puttext (0.2.1)
       parser (>= 2.4.0.0, < 3.0)
       unindent
 
@@ -67,4 +67,4 @@ DEPENDENCIES
   timecop
 
 BUNDLED WITH
-   1.14.6
+   1.15.1

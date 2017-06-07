@@ -15,8 +15,10 @@ module PutText
       METHODS = {
         gettext:   :regular,
         _:         :regular,
+        N_:        :regular,
         ngettext:  :plural,
         n_:        :plural,
+        Nn_:       :plural,
         sgettext:  :context_sep,
         s_:        :context_sep,
         nsgettext: :context_sep_plural,

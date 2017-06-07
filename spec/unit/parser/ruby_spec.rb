@@ -15,8 +15,10 @@ describe PutText::Parser::Ruby do
               [
                 gettext('gettext'),
                 _('underscore'),
+                N_('nothing underscore'),
                 ngettext('1 ngettext', '%d ngettexts', 5),
                 n_('1 underscore', '%d underscores', 5),
+                Nn_('1 nothing', '%d nothings', 5),
                 sgettext('context|sgettext'),
                 s_('context---s underscore', '---'),
                 nsgettext('context|1 nsgettext', '%d nsgettexts', 5),
@@ -45,7 +47,7 @@ describe PutText::Parser::Ruby do
       end
 
       it 'extracts the correct number of strings' do
-        expect(PutText::POEntry).to have_received(:new).exactly(12).times
+        expect(PutText::POEntry).to have_received(:new).exactly(14).times
       end
 
       it 'correctly extracts string from gettext calls' do
@@ -62,11 +64,18 @@ describe PutText::Parser::Ruby do
         )
       end
 
+      it 'correctly extracts string from N_ calls' do
+        expect(PutText::POEntry).to have_received(:new).with(
+          msgid: 'nothing underscore',
+          references: ['test.rb:13']
+        )
+      end
+
       it 'correctly extracts string from ngettext calls' do
         expect(PutText::POEntry).to have_received(:new).with(
           msgid: '1 ngettext',
           msgid_plural: '%d ngettexts',
-          references: ['test.rb:13']
+          references: ['test.rb:14']
         )
       end
 
@@ -74,14 +83,22 @@ describe PutText::Parser::Ruby do
         expect(PutText::POEntry).to have_received(:new).with(
           msgid: '1 underscore',
           msgid_plural: '%d underscores',
-          references: ['test.rb:14']
+          references: ['test.rb:15']
+        )
+      end
+
+      it 'correctly extracts string from Nn_ calls' do
+        expect(PutText::POEntry).to have_received(:new).with(
+          msgid: '1 nothing',
+          msgid_plural: '%d nothings',
+          references: ['test.rb:16']
         )
       end
 
       it 'correctly extracts string from sgettext calls' do
         expect(PutText::POEntry).to have_received(:new).with(
           msgid: 'context|sgettext',
-          references: ['test.rb:15']
+          references: ['test.rb:17']
         )
       end
 
@@ -89,7 +106,7 @@ describe PutText::Parser::Ruby do
         expect(PutText::POEntry).to have_received(:new).with(
           msgid: 'context---s underscore',
           separator: '---',
-          references: ['test.rb:16']
+          references: ['test.rb:18']
         )
       end
 
@@ -97,7 +114,7 @@ describe PutText::Parser::Ruby do
         expect(PutText::POEntry).to have_received(:new).with(
           msgid: 'context|1 nsgettext',
           msgid_plural: '%d nsgettexts',
-          references: ['test.rb:17']
+          references: ['test.rb:19']
         )
       end
 
@@ -106,7 +123,7 @@ describe PutText::Parser::Ruby do
           msgid: 'context---1 ns underscore',
           msgid_plural: '%d ns underscores',
           separator: '---',
-          references: ['test.rb:18']
+          references: ['test.rb:20']
         )
       end
 
@@ -114,7 +131,7 @@ describe PutText::Parser::Ruby do
         expect(PutText::POEntry).to have_received(:new).with(
           msgctxt: 'context',
           msgid: 'pgettext',
-          references: ['test.rb:19']
+          references: ['test.rb:21']
         )
       end
 
@@ -122,7 +139,7 @@ describe PutText::Parser::Ruby do
         expect(PutText::POEntry).to have_received(:new).with(
           msgctxt: 'context',
           msgid: 'p underscore',
-          references: ['test.rb:20']
+          references: ['test.rb:22']
         )
       end
 
@@ -131,7 +148,7 @@ describe PutText::Parser::Ruby do
           msgctxt: 'context',
           msgid: '1 npgettext',
           msgid_plural: '%d npgettexts',
-          references: ['test.rb:21']
+          references: ['test.rb:23']
         )
       end
 
@@ -140,7 +157,7 @@ describe PutText::Parser::Ruby do
           msgctxt: 'context',
           msgid: '1 np underscore',
           msgid_plural: '%d np underscores',
-          references: ['test.rb:22']
+          references: ['test.rb:24']
         )
       end
     end

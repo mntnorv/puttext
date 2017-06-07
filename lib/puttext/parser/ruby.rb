@@ -64,17 +64,11 @@ module PutText
         case ast_node.type
         when :str
           ast_node.children[0]
-        else
-          raise ParseError,
-                format('unsupported AST node type: %s', ast_node.type)
         end
       end
 
       def po_entry_from_ast_node(ast_node, type)
-        filename = ast_node.location.expression.source_buffer.name
-        line     = ast_node.location.line
-
-        entry_attrs = { references: ["#{filename}:#{line}"] }
+        entry_attrs = { references: [ast_node_location(ast_node)] }
 
         PARAMS[type].each_with_index do |name, index|
           next if name == :_ # skip parameters named _
@@ -83,7 +77,14 @@ module PutText
           entry_attrs[name] = param if param
         end
 
-        PutText::POEntry.new(entry_attrs)
+        PutText::POEntry.new(entry_attrs) if entry_attrs[:msgid]
+      end
+
+      def ast_node_location(ast_node)
+        filename = ast_node.location.expression.source_buffer.name
+        line     = ast_node.location.line
+
+        "#{filename}:#{line}"
       end
 
       def find_strings_in_ast(ast_node)
@@ -98,7 +99,7 @@ module PutText
           entries += find_strings_in_each_ast(ast_node.children)
         end
 
-        entries
+        entries.compact
       end
 
       def find_strings_in_each_ast(ast_nodes)

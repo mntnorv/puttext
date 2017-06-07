@@ -4,9 +4,6 @@ require_relative '../po_entry'
 
 module PutText
   module Parser
-    # Thrown when any error parsing a file occurs
-    class ParseError < StandardError; end
-
     class Base
       # Parse gettext strings from a file in the path.
       # @param [String] path the path of the file to parse.

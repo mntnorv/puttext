@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    puttext (0.3.0)
+    puttext (0.3.2)
       parser (>= 2.4.0.0, < 3.0)
       unindent
 

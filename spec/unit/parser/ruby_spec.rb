@@ -183,10 +183,8 @@ describe PutText::Parser::Ruby do
         RUBY
       end
 
-      it 'throws a PutText::Parser::ParseError error' do
-        expect { subject.strings_from_source(ruby_code) }.to raise_error(
-          PutText::Parser::ParseError
-        )
+      it 'skips the entry, returns an empty array' do
+        expect(subject.strings_from_source(ruby_code)).to eq([])
       end
     end
   end
